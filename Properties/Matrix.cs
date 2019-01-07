@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 public class Matrix
 {
-    int rows, columns;
+    public int rows, columns;
     double[,] data;
+    private Matrix matrix;
 
     // Constructor 1
     public Matrix(int rows_, int columns_)
@@ -17,12 +18,12 @@ public class Matrix
     // Constructor 2
     public Matrix(double[] inputs)
     {
-        rows = inputs.Length;
-        columns = 1;
+        rows = 1;
+        columns = inputs.Length;
         data = new double[rows, columns];
 
-        for (int i = 0; i < rows; i++)
-            data[i, 0] = inputs[i];
+        for (int i = 0; i < columns; i++)
+            data[0, i] = inputs[i];
     }
 
     public double[] ToArray()
@@ -34,6 +35,24 @@ public class Matrix
         return r.ToArray();
     }
 
+    public void AddColumns(int nColumns, bool random = true)
+    {
+        int oldNColumns = columns;
+        columns += nColumns;
+
+        double[,] new_data = new double[rows, columns];
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < oldNColumns; j++)
+                new_data[i, j] = data[i, j];
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < nColumns; j++)
+                new_data[i, oldNColumns + j] = (random)? Utility.NextDouble(-.5F, .5F) : 1;
+
+        data = new_data;
+    }
+
     public void Randomize()
     {
         for (int i = 0; i < rows; i++)
@@ -41,7 +60,7 @@ public class Matrix
                 data[i, j] = Utility.NextDouble(-.5F, .5F);
     }
 
-    public void Transpose()
+    public void T()
     {
         Matrix r = new Matrix(columns, rows);
 
@@ -54,14 +73,16 @@ public class Matrix
     }
 
     // Apply a random function that receives a double and returns a double at each spot in the matrix
-    public void Map(Func<double, double> func)
+    public Matrix Map(Func<double, double> func)
     {
+        Matrix r = this;
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < columns; j++)
-                data[i, j] = func(data[i, j]);
+                r.data[i, j] = func(data[i, j]);
+        return r;
     }
 
-    public static Matrix Transpose(Matrix a)
+    public static Matrix T(Matrix a)
     {
         Matrix r = new Matrix(a.columns, a.rows);
 
@@ -71,6 +92,14 @@ public class Matrix
         return r;
     }
 
+    public double SumSquared()
+    {
+        double sum = 0;
+        for (int i = 0; i < columns; i++)
+            sum += data[0, i] * data[0, i];
+        return sum;
+    }
+
     public static Matrix Add(Matrix a, double n)
     {
         Matrix r = new Matrix(a.rows, a.columns);
@@ -78,6 +107,18 @@ public class Matrix
         for (int i = 0; i < a.rows; i++)
             for (int j = 0; j < a.columns; j++)
                 r.data[i, j] = a.data[i, j] + n;
+        return r;
+    }
+
+    public Matrix SubMatrix(int[] rowsRange, int[] columnsRange)
+    {
+        int newRows = rowsRange[1] - rowsRange[0];
+        int newColumns = columnsRange[1] - columnsRange[0];
+        Matrix r = new Matrix(newRows, newColumns);
+
+        for (int i = 0; i < newRows; i++)
+            for (int j = 0; j < newColumns; j++)
+                r.data[i, j] = data[rowsRange[0] - 1 + i, columnsRange[0] - 1 + j];
         return r;
     }
 
@@ -127,6 +168,17 @@ public class Matrix
                     sum += a.data[i, k] * b.data[k, j];
                 r.data[i, j] = sum;
             }
+        return r;
+    }
+
+    public static Matrix MultiplyT(Matrix a, Matrix b)
+    {
+        Matrix r = new Matrix(a.rows, a.columns);
+
+        for (int i = 0; i < r.rows; i++)
+            for (int j = 0; j < r.columns; j++)
+                r.data[i, j] = a.data[i, j] * b.data[i, j];
+
         return r;
     }
 }
