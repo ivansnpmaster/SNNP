@@ -17,7 +17,7 @@ namespace SNNP_Test
 
             var r = mlp.Backpropagation(dataset);
 
-            StreamWriter sw = new StreamWriter("Teste.txt");
+            StreamWriter sw = new StreamWriter("Test.txt");
 
             foreach (double d in r)
             {
@@ -39,7 +39,6 @@ namespace SNNP_Test
             */
 
             sw.Close();
-            Console.ReadKey();
         }
     }
 }

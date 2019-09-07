@@ -29,8 +29,8 @@ namespace SNNP.MLP
 
             //for (int i = 1; i < w.Length - 1; i++)
             //{
-            //    w[i] = new Matrix(h_n[i], h_n[i - 1], true);
-            //    b[i] = new Matrix(h_n[i], 1, true);
+            //    w[i] = new Matrix(h_n[i], h_n[i - 1]);
+            //    b[i] = new Matrix(h_n[i], 1);
             //}
 
             w[w.Length - 1] = new Matrix(o_n, h_n[h_n.Length - 1]);

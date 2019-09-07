@@ -8,15 +8,14 @@ namespace SNNP.MLP
 
         public double[,] data;
 
-        public Matrix(int rows, int columns, bool randomize = false)
+        public Matrix(int rows, int columns)
         {
             r = rows;
             c = columns;
 
             data = new double[r, c];
 
-            if (randomize)
-                Randomize();
+            Randomize();
         }
 
         public Matrix(double[] inputs)
@@ -69,7 +68,7 @@ namespace SNNP.MLP
             double ret = 0;
 
             for (int i = 0; i < r; i++)
-                    ret += data[i, 0] * data[i, 0];
+                ret += data[i, 0] * data[i, 0];
 
             return ret / (double)r;
         }
@@ -125,8 +124,6 @@ namespace SNNP.MLP
 
         public static Matrix operator *(Matrix a, Matrix b)
         {
-            if (a.c != b.r)
-                throw new System.NotImplementedException($"Linhas de a = {a.r} diferente de colunas de b = {b.c}");
             Matrix ret = new Matrix(a.r, b.c);
 
             for (int i = 0; i < ret.r; i++)
@@ -141,16 +138,16 @@ namespace SNNP.MLP
             return ret;
         }
 
-public static Matrix operator *(Matrix m, double n)
-{
-    Matrix ret = new Matrix(m.r, m.c);
+        public static Matrix operator *(Matrix m, double n)
+        {
+            Matrix ret = new Matrix(m.r, m.c);
 
-    for (int i = 0; i < m.r; i++)
-        for (int j = 0; j < m.c; j++)
-            ret.data[i, j] = m.data[i, j] * n;
+            for (int i = 0; i < m.r; i++)
+                for (int j = 0; j < m.c; j++)
+                    ret.data[i, j] = m.data[i, j] * n;
 
-    return ret;
-}
+            return ret;
+        }
 
         public static Matrix operator ^(Matrix m, double n)
         {
@@ -170,9 +167,9 @@ public static Matrix operator *(Matrix m, double n)
             return a;
         }
 
-public static Matrix operator *(double n, Matrix m)
-{
-    return m * n;
-}
+        public static Matrix operator *(double n, Matrix m)
+        {
+            return m * n;
+        }
     }
 }

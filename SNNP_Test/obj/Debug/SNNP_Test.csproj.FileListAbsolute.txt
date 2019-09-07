@@ -18,3 +18,13 @@ C:\Users\ivanr\Desktop\GitHub\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csproj.CoreComp
 C:\Users\ivanr\Desktop\GitHub\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csproj.CopyComplete
 C:\Users\ivanr\Desktop\GitHub\SNNP\SNNP_Test\obj\Debug\SNNP_Test.exe
 C:\Users\ivanr\Desktop\GitHub\SNNP\SNNP_Test\obj\Debug\SNNP_Test.pdb
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.exe.config
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.exe
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.pdb
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP.dll
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP.pdb
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csprojAssemblyReference.cache
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csproj.CoreCompileInputs.cache
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csproj.CopyComplete
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.exe
+C:\Users\ivanr\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.pdb
