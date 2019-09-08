@@ -106,21 +106,51 @@ namespace SNNP.MLP
 
                     // % hadamard product, * matrix multiplication
 
-                    Matrix error_o = error % Matrix.Map(fnet[fnet.Length - 1], da_f);
+                    //Matrix error_o = error % Matrix.Map(fnet[fnet.Length - 1], da_f);
 
-                    Matrix error_h = (Matrix.T(w[w.Length - 1]) * error_o) % Matrix.Map(fnet[fnet.Length - 2], da_f);
+                    // DEEP NEURAL NETWORK STUFF
 
-                    Matrix gradient_wo = error_o * Matrix.T(fnet[fnet.Length - 2]);
-                    Matrix gradient_bo = error_o;
+                    Matrix[] errors = new Matrix[h_n.Length + 1];
 
-                    Matrix gradient_wh = error_h * Matrix.T(i_m);
-                    Matrix gradient_bh = error_h;
+                    Matrix[] w_gradients = new Matrix[h_n.Length + 1];
+                    Matrix[] b_gradients = new Matrix[h_n.Length + 1];
 
-                    w[1] = w[1] - (eta * gradient_wo);
-                    b[1] = b[1] - (eta * gradient_bo);
+                    // Output error
+                    errors[errors.Length - 1] = error % Matrix.Map(net[net.Length - 1], da_f);
+                    w_gradients[w_gradients.Length - 1] = errors[errors.Length - 1] * Matrix.T(fnet[fnet.Length - 2]);
+                    b_gradients[b_gradients.Length - 1] = errors[errors.Length - 1];
 
-                    w[0] = w[0] - (eta * gradient_wh);
-                    b[0] = b[0] - (eta * gradient_bh);
+                    // First hidden layer must have an operations with the inputs, that's why j > 0
+                    for (int j = errors.Length - 2; j > 0; j--)
+                    {
+                        errors[j] = (Matrix.T(w[j + 1]) * errors[j + 1]) % Matrix.Map(net[j], da_f);
+                        w_gradients[j] = errors[j] * Matrix.T(fnet[j - 1]);
+                        b_gradients[j] = errors[j];
+                    }
+
+                    errors[0] = (Matrix.T(w[1]) * errors[1]) % Matrix.Map(net[0], da_f);
+                    w_gradients[0] = errors[0] * Matrix.T(i_m);
+                    b_gradients[0] = errors[0];
+
+                    //Matrix error_h = (Matrix.T(w[w.Length - 1]) * error_o) % Matrix.Map(fnet[fnet.Length - 2], da_f);
+
+                    //Matrix gradient_wo = error_o * Matrix.T(fnet[fnet.Length - 2]);
+                    //Matrix gradient_bo = error_o;
+
+                    //Matrix gradient_wh = error_h * Matrix.T(i_m);
+                    //Matrix gradient_bh = error_h;
+
+                    for (int j = w.Length - 1; j > -1; j--)
+                    {
+                        w[j] -= eta * w_gradients[j];
+                        b[j] -= eta * b_gradients[j];
+                    }
+
+                    //w[1] = w[1] - (eta * gradient_wo);
+                    //b[1] = b[1] - (eta * gradient_bo);
+
+                    //w[0] = w[0] - (eta * gradient_wh);
+                    //b[0] = b[0] - (eta * gradient_bh);
                 }
 
                 squaredError /= rows;
