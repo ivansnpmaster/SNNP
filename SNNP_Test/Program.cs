@@ -18,25 +18,23 @@ namespace SNNP_Test
             var r = mlp.Backpropagation(dataset);
 
             StreamWriter sw = new StreamWriter("Test.txt");
-
+            
             foreach (double d in r)
             {
                 sw.WriteLine(d);
             }
+            
+            //double niter = 100;
 
-            /*
-            double niter = 100;
+            //for (int i = 0; i < niter; i++)
+            //    for (int j = 0; j < niter; j++)
+            //    {
+            //        double ii = i / niter;
+            //        double jj = j / niter;
+            //        double[] re = { ii, jj };
 
-            for (int i = 0; i < niter; i++)
-                for (int j = 0; j < niter; j++)
-                {
-                    double ii = i / niter;
-                    double jj = j / niter;
-                    double[] re = { ii, jj };
-
-                    sw.WriteLine(String.Format("{0} {1} {2}", ii, jj, mlp.Feedforward(re).Item2[1].data[0, 0]));
-                }
-            */
+            //        sw.WriteLine(String.Format("{0} {1} {2}", ii, jj, mlp.Feedforward(re).Item2[1].data[0, 0]));
+            //    }           
 
             sw.Close();
         }

@@ -82,11 +82,13 @@ namespace SNNP.MLP
 
         public static Matrix Map(Matrix m, Func<double, double> f)
         {
+            Matrix ret = new Matrix(m.r, m.c);
+
             for (int i = 0; i < m.r; i++)
                 for (int j = 0; j < m.c; j++)
-                    m.data[i, j] = f(m.data[i, j]);
+                    ret.data[i, j] = f(m.data[i, j]);
 
-            return m;
+            return ret;
         }
 
         public static Matrix T(Matrix m)
@@ -149,6 +151,11 @@ namespace SNNP.MLP
             return ret;
         }
 
+        public static Matrix operator *(double n, Matrix m)
+        {
+            return m * n;
+        }
+
         public static Matrix operator ^(Matrix m, double n)
         {
             for (int i = 0; i < m.r; i++)
@@ -160,16 +167,13 @@ namespace SNNP.MLP
 
         public static Matrix operator %(Matrix a, Matrix b)
         {
+            Matrix ret = new Matrix(a.r, a.c);
+
             for (int i = 0; i < b.r; i++)
                 for (int j = 0; j < b.c; j++)
-                    a.data[i, j] = a.data[i, j] * b.data[i, j];
+                    ret.data[i, j] = a.data[i, j] * b.data[i, j];
 
-            return a;
-        }
-
-        public static Matrix operator *(double n, Matrix m)
-        {
-            return m * n;
+            return ret;
         }
     }
 }

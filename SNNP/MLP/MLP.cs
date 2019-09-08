@@ -27,11 +27,11 @@ namespace SNNP.MLP
             w[0] = new Matrix(h_n[0], i_n);
             b[0] = new Matrix(h_n[0], 1);
 
-            //for (int i = 1; i < w.Length - 1; i++)
-            //{
-            //    w[i] = new Matrix(h_n[i], h_n[i - 1]);
-            //    b[i] = new Matrix(h_n[i], 1);
-            //}
+            for (int i = 1; i < w.Length - 1; i++)
+            {
+                w[i] = new Matrix(h_n[i], h_n[i - 1]);
+                b[i] = new Matrix(h_n[i], 1);
+            }
 
             w[w.Length - 1] = new Matrix(o_n, h_n[h_n.Length - 1]);
             b[b.Length - 1] = new Matrix(o_n, 1);
@@ -50,30 +50,28 @@ namespace SNNP.MLP
             net[0] = w[0] * inputs + b[0];
             fnet[0] = Matrix.Map(net[0], a_f);
 
-            //for (int i = 1; i < net.Length; i++)
-            //{
-            //    net[i] = w[i] * fnet[i - 1] + b[i];
-            //    fnet[i] = Matrix.Map(net[i], a_f);
-            //}
+            for (int i = 1; i < net.Length; i++)
+            {
+                net[i] = w[i] * fnet[i - 1] + b[i];
+                fnet[i] = Matrix.Map(net[i], a_f);
+            }
 
-            net[1] = w[1] * fnet[0] + b[1];
-            fnet[1] = Matrix.Map(net[1], a_f);
+            //net[net.Length - 1] = w[net.Length - 1] * fnet[fnet.Length - 2] + b[b.Length - 1];
+            //fnet[fnet.Length - 1] = Matrix.Map(net[net.Length - 1], a_f);
 
             return new Tuple<Matrix[], Matrix[], Matrix>(net, fnet, inputs);
         }
 
-        public List<double> Backpropagation(double[,] dataset, double eta = 0.1, double threshold = 1e-3)
+        public List<double> Backpropagation(double[,] dataset, double eta = 0.1, double threshold = 1e-3, int iterations = 50000)
         {
             List<double> ret = new List<double>();
 
             double rows = dataset.GetLength(0);
-
-            const int number_iter = 100000;
             int counter = 0;
 
             double squaredError = 2 * threshold;
 
-            while (counter < number_iter && squaredError > threshold)
+            while (counter < iterations && squaredError > threshold)
             {
                 squaredError = 0;
                 counter++;
@@ -108,7 +106,7 @@ namespace SNNP.MLP
 
                     // % hadamard product, * matrix multiplication
 
-                    Matrix error_o = (-2 * error) % Matrix.Map(fnet[fnet.Length - 1], da_f);
+                    Matrix error_o = error % Matrix.Map(fnet[fnet.Length - 1], da_f);
 
                     Matrix error_h = (Matrix.T(w[w.Length - 1]) * error_o) % Matrix.Map(fnet[fnet.Length - 2], da_f);
 
