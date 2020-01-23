@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,10 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="kMeans\Cluster.cs" />
+    <Compile Include="kMeans\KMeans.cs" />
     <Compile Include="MLP\Activation.cs" />
     <Compile Include="MLP\Matrix.cs" />
     <Compile Include="MLP\MLP.cs" />
-    <Compile Include="MLP\Utility.cs" />
+    <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

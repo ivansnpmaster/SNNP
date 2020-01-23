@@ -15,3 +15,8 @@ C:\Users\ivanr\Desktop\SNNP\SNNP\bin\Debug\SNNP.pdb
 C:\Users\ivanr\Desktop\SNNP\SNNP\obj\Debug\SNNP.csproj.CoreCompileInputs.cache
 C:\Users\ivanr\Desktop\SNNP\SNNP\obj\Debug\SNNP.dll
 C:\Users\ivanr\Desktop\SNNP\SNNP\obj\Debug\SNNP.pdb
+C:\Users\ivan.soares\Desktop\SNNP-master\SNNP\bin\Debug\SNNP.dll
+C:\Users\ivan.soares\Desktop\SNNP-master\SNNP\bin\Debug\SNNP.pdb
+C:\Users\ivan.soares\Desktop\SNNP-master\SNNP\obj\Debug\SNNP.csprojAssemblyReference.cache
+C:\Users\ivan.soares\Desktop\SNNP-master\SNNP\obj\Debug\SNNP.dll
+C:\Users\ivan.soares\Desktop\SNNP-master\SNNP\obj\Debug\SNNP.pdb

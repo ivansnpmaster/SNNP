@@ -7,13 +7,13 @@ namespace SNNP.MLP
     {
         public int i_n, o_n;
 
-        private int[] h_n;
+        private readonly int[] h_n;
 
         public Matrix[] w;
         public Matrix[] b;
 
-        private Func<double, double> a_f;
-        private Func<double, double> da_f;
+        private readonly Func<double, double> a_f;
+        private readonly Func<double, double> da_f;
 
         public MLP(int input_nodes, int[] hidden_nodes, int output_nodes, Func<double, double> activation_function, Func<double, double> d_activation_function)
         {
@@ -56,13 +56,10 @@ namespace SNNP.MLP
                 fnet[i] = Matrix.Map(net[i], a_f);
             }
 
-            //net[net.Length - 1] = w[net.Length - 1] * fnet[fnet.Length - 2] + b[b.Length - 1];
-            //fnet[fnet.Length - 1] = Matrix.Map(net[net.Length - 1], a_f);
-
             return new Tuple<Matrix[], Matrix[], Matrix>(net, fnet, inputs);
         }
 
-        public List<double> Backpropagation(double[,] dataset, double eta = 0.1, double threshold = 1e-3, int iterations = 50000)
+        public List<double> Backpropagation(double[,] dataset, double eta = 0.01, double threshold = 1e-3, int iterations = 5000)
         {
             List<double> ret = new List<double>();
 
@@ -112,7 +109,7 @@ namespace SNNP.MLP
                     Matrix[] b_gradients = new Matrix[h_n.Length + 1];
 
                     // Output error
-                    errors[errors.Length - 1] = error % Matrix.Map(net[net.Length - 1], da_f);
+                    errors[errors.Length - 1] = (2 * error) % Matrix.Map(net[net.Length - 1], da_f);
                     w_gradients[w_gradients.Length - 1] = errors[errors.Length - 1] * Matrix.T(fnet[fnet.Length - 2]);
                     b_gradients[b_gradients.Length - 1] = errors[errors.Length - 1];
 
@@ -137,7 +134,7 @@ namespace SNNP.MLP
 
                 squaredError /= rows;
 
-                Console.WriteLine(squaredError);
+                //Console.WriteLine(string.Format("{0} - {1}", counter, squaredError));
 
                 ret.Add(squaredError);
             }
