@@ -23,6 +23,9 @@ namespace SNNP.kMeans
 
             for (int i = 0; i < iterations; i++)
             {
+                for (int j = 0; j < clusters.Length; j++)
+                    clusters[j].points.Clear();
+
                 GetClosestClusters();
 
                 for (int j = 0; j < k; j++)
