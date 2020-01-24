@@ -15,6 +15,14 @@ namespace SNNP.MLP
         private readonly Func<double, double> a_f;
         private readonly Func<double, double> da_f;
 
+        /// <summary>
+        /// Creates a vanilla Multilayer Perceptron with support to multiple hidden layers.
+        /// </summary>
+        /// <param name="input_nodes">Number of inputs that the model will receive.</param>
+        /// <param name="hidden_nodes">Organization of the hidden layers.</param>
+        /// <param name="output_nodes">Number of outputs that the model will produce.</param>
+        /// <param name="activation_function">Activation function to produce an output.</param>
+        /// <param name="d_activation_function">The derivative of the activation function to train the model.</param>
         public MLP(int input_nodes, int[] hidden_nodes, int output_nodes, Func<double, double> activation_function, Func<double, double> d_activation_function)
         {
             i_n = input_nodes;
@@ -40,14 +48,19 @@ namespace SNNP.MLP
             da_f = d_activation_function;
         }
 
+        /// <summary>
+        /// Feedforward the given inputs.
+        /// </summary>
+        /// <param name="input_nodes">Input data to predict.</param>
+        /// <returns>A tuple with net (as Matrix[]), fnet (as Matrix[]) and input (as Matrix).</returns>
         public Tuple<Matrix[], Matrix[], Matrix> Feedforward(double[] input_nodes)
         {
-            Matrix inputs = new Matrix(input_nodes);
+            Matrix input = new Matrix(input_nodes);
 
             Matrix[] net = new Matrix[h_n.Length + 1];
             Matrix[] fnet = new Matrix[h_n.Length + 1];
 
-            net[0] = w[0] * inputs + b[0];
+            net[0] = w[0] * input + b[0];
             fnet[0] = Matrix.Map(net[0], a_f);
 
             for (int i = 1; i < net.Length; i++)
@@ -56,10 +69,18 @@ namespace SNNP.MLP
                 fnet[i] = Matrix.Map(net[i], a_f);
             }
 
-            return new Tuple<Matrix[], Matrix[], Matrix>(net, fnet, inputs);
+            return new Tuple<Matrix[], Matrix[], Matrix>(net, fnet, input);
         }
 
-        public List<double> Backpropagation(double[,] dataset, double eta = 0.01, double threshold = 1e-3, int iterations = 5000)
+        /// <summary>
+        /// Trains the model based on a dataset.
+        /// </summary>
+        /// <param name="dataset">Dataset to train the model. It must match the model construction parameters in order to predict multiple values.</param>
+        /// <param name="eta">To reduce the intensity of the gradient.</param>
+        /// <param name="threshold">Threshold to stop the training process.</param>
+        /// <param name="iterations">Maximum number of iterations to stop the training process.</param>
+        /// <returns>A list with the mean squared error over each epoch.</returns>
+        public List<double> Backpropagation(double[,] dataset, double eta = 0.01, double threshold = 1e-3, int iterations = 50000)
         {
             List<double> ret = new List<double>();
 

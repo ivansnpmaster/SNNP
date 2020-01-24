@@ -13,6 +13,12 @@ namespace SNNP.kMeans
         private Dictionary<int, int> lastClosest;
         private Dictionary<int, int> stopCriteria;
 
+        /// <summary>
+        /// Create a vanilla KMeans algorithm.
+        /// </summary>
+        /// <param name="dataset">Data to be clustered.</param>
+        /// <param name="k">Number of clusters.</param>
+        /// <param name="minIterations">Amount of minimal iterations to find the clusters.</param>
         public KMeans(double[,] dataset, int k, int minIterations = 2)
         {
             _k = k;
@@ -44,28 +50,31 @@ namespace SNNP.kMeans
                     continue;
                 }
 
-                // Verificar se o lastClosest é igual ao stopCriteria
+                // Cheking if the 'lastClosest' is equal to 'stopCriteria'
 
                 foreach (var a in lastClosest.Keys)
-                    // Se qualquer key da iteração t for diferente da iteração t-1
+                    // If any key is different, don't stop
                     if (lastClosest[a] != stopCriteria[a])
                         stop = false;
 
             } while (!stop || nIter <= iterations);
         }
 
+        /// <summary>
+        /// Adding points from the dataset to their closest cluster.
+        /// </summary>
         private void GetClosestClusters()
         {
-            // int - index of the line in the dataset; int - cluster's index
+            // int - Index of the line in the dataset; int - Cluster's index
             Dictionary<int, int> closest = new Dictionary<int, int>();
 
             for (int i = 0; i < _dataset.GetLength(0); i++)
             {
-                // Encontrar o cluster mais próximo de cada linha do dataset
+                // Finding the closest cluster of every line in the dataset
 
-                // Índice do cluster mais próximo
+                // Closest index
                 int recordIndex = 0;
-                // Menor distância
+                // Smaller Euclidean distance
                 double recordDistance = double.MaxValue;
 
                 for (int j = 0; j < clusters.Length; j++)
@@ -100,10 +109,14 @@ namespace SNNP.kMeans
             lastClosest = closest;
         }
 
+        /// <summary>
+        /// Set the initial clusters from the dataset ramdomly. It never gets the same feature twice as long as there are enough data in the dataset.
+        /// </summary>
+        /// <param name="dataset">Dataset to get the initial clusters.</param>
         private void SetClustersFromDataset(double[,] dataset)
         {
             clusters = new Cluster[_k];
-            // Índices já encontrados
+            // Already found indices
             int[] iCluster = new int[_k];
 
             for (int i = 0; i < _k; i++)
@@ -111,16 +124,14 @@ namespace SNNP.kMeans
 
             for (int i = 0; i < _k; i++)
             {
-                //Console.WriteLine(string.Format("Setting cluster k = {0}", i + 1));
-
-                // Checar se uma linha do dataset foi encontrada nos clusteres iniciais
+                // Check if a line in the dataset was found in the initial clusters
                 bool clusterFound = false;
-                // Um índice randômico do dataset
+                // Random index within the dataset
                 int randomIndex = Utility.Next(0, dataset.GetLength(1));
 
-                // Checando se já existe o índice randômico no array de índices de clusteres
+                // Check if the random index already exists in the cluster's array of indexes
                 for (int j = 0; j < iCluster.Length; j++)
-                    // Se existe um cluster já adicionado
+                    // If the cluster already exists
                     if (iCluster[j] == randomIndex)
                     {
                         clusterFound = true;

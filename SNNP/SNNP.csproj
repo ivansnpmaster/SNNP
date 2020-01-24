@@ -44,11 +44,16 @@
   <ItemGroup>
     <Compile Include="kMeans\Cluster.cs" />
     <Compile Include="kMeans\KMeans.cs" />
+    <Compile Include="KNN\KNN.cs" />
+    <Compile Include="KNN\Point.cs" />
     <Compile Include="MLP\Activation.cs" />
     <Compile Include="MLP\Matrix.cs" />
     <Compile Include="MLP\MLP.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="KNN\KNN - Pseudocode.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
