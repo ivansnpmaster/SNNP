@@ -5,33 +5,38 @@ namespace SNNP.kMeans
 {
     public class KMeans
     {
-        public int k;
-        public double[,] dataset;
+        public int _k;
+        public double[,] _dataset;
         public int iterations;
         private Cluster[] clusters;
 
         private Dictionary<int, int> lastClosest;
         private Dictionary<int, int> stopCriteria;
 
-        public KMeans(double[,] _dataset, int _k, int _iterations)
+        public KMeans(double[,] dataset, int k, int minIterations = 2)
         {
-            k = _k;
-            dataset = _dataset;
-            iterations = _iterations;
+            _k = k;
+            _dataset = dataset;
+            iterations = minIterations;
 
-            SetClustersFromDataset(dataset);
+            SetClustersFromDataset(_dataset);
 
-            for (int i = 0; i < iterations; i++)
+            bool stop;
+            int nIter = 0;
+
+            do
             {
+                nIter++;
+
                 for (int j = 0; j < clusters.Length; j++)
                     clusters[j].points.Clear();
 
                 GetClosestClusters();
 
-                for (int j = 0; j < k; j++)
+                for (int j = 0; j < _k; j++)
                     clusters[j].RecalculatePosition();
 
-                bool stop = true;
+                stop = true;
 
                 if (stopCriteria == null)
                 {
@@ -46,9 +51,7 @@ namespace SNNP.kMeans
                     if (lastClosest[a] != stopCriteria[a])
                         stop = false;
 
-                if (stop)
-                    break;
-            }
+            } while (!stop || nIter <= iterations);
         }
 
         private void GetClosestClusters()
@@ -56,17 +59,21 @@ namespace SNNP.kMeans
             // int - index of the line in the dataset; int - cluster's index
             Dictionary<int, int> closest = new Dictionary<int, int>();
 
-            for (int i = 0; i < dataset.GetLength(0); i++)
+            for (int i = 0; i < _dataset.GetLength(0); i++)
             {
+                // Encontrar o cluster mais próximo de cada linha do dataset
+
+                // Índice do cluster mais próximo
                 int recordIndex = 0;
-                double recordDistance = 0;
+                // Menor distância
+                double recordDistance = double.MaxValue;
 
                 for (int j = 0; j < clusters.Length; j++)
                 {
-                    double[] position = new double[dataset.GetLength(1)];
+                    double[] position = new double[_dataset.GetLength(1)];
 
                     for (int m = 0; m < position.Length; m++)
-                        position[m] = dataset[i, m];
+                        position[m] = _dataset[i, m];
 
                     double distance = Utility.GetDistance(position, clusters[j].position);
 
@@ -77,12 +84,15 @@ namespace SNNP.kMeans
                     }
                 }
 
-                closest[recordIndex]++;
+                if (closest.ContainsKey(recordIndex))
+                    closest[recordIndex]++;
+                else
+                    closest.Add(recordIndex, 1);
 
-                double[] point = new double[dataset.GetLength(1)];
+                double[] point = new double[_dataset.GetLength(1)];
 
                 for (int m = 0; m < point.Length; m++)
-                    point[m] = dataset[i, m];
+                    point[m] = _dataset[i, m];
 
                 clusters[recordIndex].points.Add(point);
             }
@@ -92,12 +102,17 @@ namespace SNNP.kMeans
 
         private void SetClustersFromDataset(double[,] dataset)
         {
-            clusters = new Cluster[k];
+            clusters = new Cluster[_k];
             // Índices já encontrados
-            int[] iCluster = new int[k];
+            int[] iCluster = new int[_k];
 
-            for (int i = 0; i < k; i++)
+            for (int i = 0; i < _k; i++)
+                iCluster[i] = -1;
+
+            for (int i = 0; i < _k; i++)
             {
+                //Console.WriteLine(string.Format("Setting cluster k = {0}", i + 1));
+
                 // Checar se uma linha do dataset foi encontrada nos clusteres iniciais
                 bool clusterFound = false;
                 // Um índice randômico do dataset
@@ -115,7 +130,7 @@ namespace SNNP.kMeans
                 if (!clusterFound)
                 {
                     iCluster[i] = randomIndex;
-                    clusters[i].position = new double[dataset.GetLength(1)];
+                    clusters[i] = new Cluster(new double[dataset.GetLength(1)]);
 
                     for (int j = 0; j < dataset.GetLength(1); j++)
                         clusters[i].position[j] = dataset[randomIndex, j];

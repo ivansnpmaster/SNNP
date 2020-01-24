@@ -78,7 +78,7 @@ namespace SNNP.MLP
 
             for (int i = 0; i < points.GetLength(0); i++)
                 for (int j = 0; j < points.GetLength(1); j++)
-                    r[i] += points[i, j];
+                    r[j] += points[i, j];
 
             for (int i = 0; i < r.Length; i++)
                 r[i] /= points.GetLength(0);
