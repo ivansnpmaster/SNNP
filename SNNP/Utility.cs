@@ -116,7 +116,7 @@ namespace SNNP.MLP
 
                 return data;
             }
-            catch (Exception e) { throw e; }
+            catch (Exception) { throw; }
         }
     }
 }
