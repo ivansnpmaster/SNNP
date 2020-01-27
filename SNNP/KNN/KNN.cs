@@ -1,4 +1,5 @@
-﻿using SNNP.MLP;
+﻿using System;
+using SNNP.MLP;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -38,27 +39,31 @@ namespace SNNP.KNN
         /// <returns>A label for the input.</returns>
         public string Classify(double[] input)
         {
-            Dictionary<int, double> distances = new Dictionary<int, double>();
-
-            for (int i = 0; i < points.Length; i++)
-                distances.Add(i, Utility.GetDistance(input, points[i].f));
-
-            // Starting index, number of elements to return (k)
-            var knn = distances.OrderBy(d => d.Value).ToList().GetRange(0, _k);
-
-            Dictionary<string, int> labels = new Dictionary<string, int>();
-
-            foreach(var n in knn)
+            try
             {
-                string label = points[n.Key].label;
+                Dictionary<int, double> distances = new Dictionary<int, double>();
 
-                if (labels.ContainsKey(label))
-                    labels[label]++;
-                else
-                    labels.Add(label, 1);
+                for (int i = 0; i < points.Length; i++)
+                    distances.Add(i, Utility.GetDistance(input, points[i].f));
+
+                // Starting index, number of elements to return (k)
+                var knn = distances.OrderBy(d => d.Value).ToList().GetRange(0, _k);
+
+                Dictionary<string, int> labels = new Dictionary<string, int>();
+
+                foreach (var n in knn)
+                {
+                    string label = points[n.Key].label;
+
+                    if (labels.ContainsKey(label))
+                        labels[label]++;
+                    else
+                        labels.Add(label, 1);
+                }
+
+                return labels.OrderByDescending(l => l.Value).ToList()[0].Key;
             }
-            
-            return labels.OrderByDescending(l => l.Value).ToList()[0].Key;
+            catch (Exception) { throw; }
         }
     }
 }

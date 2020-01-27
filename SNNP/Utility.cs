@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using Microsoft.VisualBasic.FileIO;
 
 namespace SNNP.MLP
@@ -92,8 +93,30 @@ namespace SNNP.MLP
 
             for (int i = 0; i < a.Length; i++)
                 distance += (a[i] - b[i]) * (a[i] - b[i]);
-            
+
             return Math.Sqrt(distance);
+        }
+
+        /// <summary>
+        /// Cast a DataTable to a double[,]. All the data in the DataTable must be numbers.
+        /// </summary>
+        /// <param name="datatable">DataTable to be casted to a double[,].</param>
+        /// <returns>Returns the casted DataTable as a double[,].</returns>
+        public static double[,] CastDataTable(DataTable datatable)
+        {
+            try
+            {
+                int r = datatable.Rows.Count;
+                int c = datatable.Columns.Count;
+                double[,] data = new double[r, c];
+
+                for (int i = 0; i < r; i++)
+                    for (int j = 0; j < c; j++)
+                        data[i, j] = Convert.ToDouble(datatable.Rows[i][j]);
+
+                return data;
+            }
+            catch (Exception e) { throw e; }
         }
     }
 }
