@@ -2,6 +2,9 @@
 using System.Data;
 using System.Collections.Generic;
 using Microsoft.VisualBasic.FileIO;
+using System.Xml.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SNNP.MLP
 {
@@ -122,6 +125,38 @@ namespace SNNP.MLP
                 return data;
             }
             catch (Exception) { throw; }
+        }
+
+        public static bool Save<T>(string filePath, object objectToSave)
+        {
+            try
+            {
+                using (Stream stream = File.Open(string.Format("{0}.bin", filePath), FileMode.Create))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    bin.Serialize(stream, objectToSave);
+                }
+
+                return true;
+            }
+            catch (IOException) { throw; }
+        }
+
+        public static T Load<T>(string filePath)
+        {
+            try
+            {
+                object o;
+
+                using (Stream stream = File.Open(filePath, FileMode.Open))
+                {
+                    BinaryFormatter bin = new BinaryFormatter();
+                    o = (T)bin.Deserialize(stream);
+                }
+
+                return (T)o;
+            }
+            catch (IOException) { throw; }
         }
     }
 }

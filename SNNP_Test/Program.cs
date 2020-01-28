@@ -57,7 +57,12 @@ namespace SNNP_Test
                 foreach (double d in r)
                     sw.WriteLine(d);
 
+            //Utility.Save<MLP>("C:\\Users\\ivan.soares\\Desktop\\mlp", mlp);
+
+            var o = Utility.Load<MLP>("C:\\Users\\ivan.soares\\Desktop\\mlp.bin");
+
             Console.WriteLine("Done");
+            Console.WriteLine(o.ToString());
             Console.ReadLine();
         }
     }

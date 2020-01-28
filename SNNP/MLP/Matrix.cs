@@ -2,6 +2,7 @@
 
 namespace SNNP.MLP
 {
+    [Serializable()]
     public class Matrix
     {
         public int r, c;

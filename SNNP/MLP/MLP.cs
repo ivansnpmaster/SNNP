@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace SNNP.MLP
 {
+    [Serializable()]
     public class MLP
     {
         public int i_n, o_n;
