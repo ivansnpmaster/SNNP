@@ -8,14 +8,15 @@ namespace SNNP.MLP
 
         public double[,] data;
 
-        public Matrix(int rows, int columns)
+        public Matrix(int rows, int columns, bool zero = false)
         {
             r = rows;
             c = columns;
 
             data = new double[r, c];
 
-            Randomize();
+            if (!zero)
+                Randomize();
         }
 
         public Matrix(double[] inputs)

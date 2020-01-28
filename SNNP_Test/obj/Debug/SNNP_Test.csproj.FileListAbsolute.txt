@@ -37,3 +37,12 @@ C:\Users\ivan.soares\Desktop\SNNP-master\SNNP_Test\obj\Debug\SNNP_Test.csprojAss
 C:\Users\ivan.soares\Desktop\SNNP-master\SNNP_Test\obj\Debug\SNNP_Test.csproj.CopyComplete
 C:\Users\ivan.soares\Desktop\SNNP-master\SNNP_Test\obj\Debug\SNNP_Test.exe
 C:\Users\ivan.soares\Desktop\SNNP-master\SNNP_Test\obj\Debug\SNNP_Test.pdb
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.exe.config
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.exe
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.pdb
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP.dll
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP.pdb
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csprojAssemblyReference.cache
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csproj.CopyComplete
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.exe
+C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.pdb

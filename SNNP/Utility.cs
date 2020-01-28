@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Collections.Generic;
 using Microsoft.VisualBasic.FileIO;
 
 namespace SNNP.MLP
@@ -89,12 +89,17 @@ namespace SNNP.MLP
 
         public static double GetDistance(double[] a, double[] b)
         {
+            return Math.Sqrt(GetDistanceSqr(a, b));
+        }
+
+        public static double GetDistanceSqr(double[] a, double[] b)
+        {
             double distance = 0;
 
             for (int i = 0; i < a.Length; i++)
                 distance += (a[i] - b[i]) * (a[i] - b[i]);
 
-            return Math.Sqrt(distance);
+            return distance;
         }
 
         /// <summary>
