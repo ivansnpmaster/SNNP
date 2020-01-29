@@ -269,10 +269,10 @@ namespace SNNP.MLP
                     {
                         w[j] -= eta * w_gradients[j] + k * wLastGradients[j];
                         b[j] -= eta * b_gradients[j] + k * bLastGradients[j];
-                    }
 
-                    wLastGradients = w_gradients;
-                    bLastGradients = b_gradients;
+                        wLastGradients[j] = k * w_gradients[j];
+                        bLastGradients[j] = k * bLastGradients[j];
+                    }
                 }
 
                 squaredError /= rows;
