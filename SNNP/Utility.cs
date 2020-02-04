@@ -38,6 +38,35 @@ namespace SNNP.MLP
             return normalized;
         }
 
+        public static double[,] Standardize(double[,] data)
+        {
+            double cols = data.GetLength(1);
+
+            double[] mean = new double[data.GetLength(1)];
+            double[] sd = new double[data.GetLength(1)];
+
+            int rows = data.GetLength(0);
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    mean[j] += data[i, j] / cols;
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    sd[j] += (data[i, j] - mean[j]) * (data[i, j] - mean[j]);
+
+            for (int j = 0; j < cols; j++)
+                sd[j] /= Math.Sqrt(sd[j] / cols - 1);
+
+            double[,] z = new double[rows, data.GetLength(1)];
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    z[i, j] = (data[i, j] - mean[j]) / sd[j];
+
+            return z;
+        }
+
         public static double[,] LoadCsv(string path, string delimiter = ",", string commentToken = "#", bool quotes = false, bool header = false)
         {
             Console.WriteLine(string.Format("Loading file at {0}", path));
