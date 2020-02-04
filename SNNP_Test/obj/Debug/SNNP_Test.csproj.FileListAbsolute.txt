@@ -46,4 +46,3 @@ C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csprojAssemblyRe
 C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.csproj.CopyComplete
 C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.exe
 C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\obj\Debug\SNNP_Test.pdb
-C:\Users\ivan.soares\Desktop\SNNP\SNNP_Test\bin\Debug\SNNP_Test.xml

@@ -56,7 +56,7 @@ namespace SNNP.MLP
                     sd[j] += (data[i, j] - mean[j]) * (data[i, j] - mean[j]);
 
             for (int j = 0; j < cols; j++)
-                sd[j] /= Math.Sqrt(sd[j] / cols - 1);
+                sd[j] /= Math.Sqrt(sd[j] / (rows - 1));
 
             double[,] z = new double[rows, data.GetLength(1)];
 

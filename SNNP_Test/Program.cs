@@ -48,6 +48,7 @@ namespace SNNP_Test
 
             // Optional -> fit into [0, 1] range
             //dataset = Utility.NormalizeData(dataset);
+            dataset = Utility.Standardize(dataset);
 
             // Training
             var r = mlp.Backpropagation_Momentum(dataset, threshold: 1e-15);
