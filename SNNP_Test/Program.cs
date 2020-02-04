@@ -7,9 +7,9 @@ namespace SNNP_Test
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] _)
         {
-            // Vanilla Multilayer Perceptron example
+            // Multilayer Perceptron example
             MLPExample();
 
             // KMeans example
@@ -38,19 +38,19 @@ namespace SNNP_Test
         private static void MLPExample()
         {
             // Hidden layers
-            int[] h_n = { 3, 2 };
+            int[] h_n = { 2 };
 
             // XOR dataset
             double[,] dataset = { { 1, 1, 0 }, { 1, 0, 1 }, { 0, 0, 0 }, { 0, 1, 1 } };
 
             // Architecture
-            var mlp = new MLP(2, h_n, 1, Activation.LeakyReLU, Activation.DLeakyReLU);
+            var mlp = new MLP(2, h_n, 1, Activation.BentIdentity, Activation.DBentIdentity);
 
             // Optional -> fit into [0, 1] range
             //dataset = Utility.NormalizeData(dataset);
 
             // Training
-            var r = mlp.Backpropagation_Momentum(dataset, eta: 1e-5, threshold: 1e-5, k: .1);
+            var r = mlp.Backpropagation_Momentum(dataset, threshold: 1e-15);
 
             // Saving into a file the mean squared error over the epochs
             using (var sw = new StreamWriter("MLPExample.txt"))
@@ -59,10 +59,10 @@ namespace SNNP_Test
 
             //Utility.Save<MLP>("C:\\Users\\ivan.soares\\Desktop\\mlp", mlp);
 
-            var o = Utility.Load<MLP>("C:\\Users\\ivan.soares\\Desktop\\mlp.bin");
+            //var o = Utility.Load<MLP>("C:\\Users\\ivan.soares\\Desktop\\mlp.bin");
+            //Console.WriteLine(o.ToString());
 
             Console.WriteLine("Done");
-            Console.WriteLine(o.ToString());
             Console.ReadLine();
         }
     }

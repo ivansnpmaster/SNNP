@@ -12,9 +12,9 @@ namespace SNNP.MLP
         public static double ReLU(double x) => x > 0 ? x : 0;
         public static double DReLU(double x) => x > 0 ? 1 : 0;
 
-        // LeakyReLU => alpha = 0.01 => output: (-infinity, infinity)
-        public static double LeakyReLU(double x) => (x > 0) ? x : 0.01 * x;
-        public static double DLeakyReLU(double x) => (x > 0) ? 1 : 0.01;
+        // LeakyReLU => alpha = 0.1 => output: (-infinity, infinity)
+        public static double LeakyReLU(double x) => (x > 0) ? x : 0.1 * x;
+        public static double DLeakyReLU(double x) => (x > 0) ? 1 : 0.1;
 
         // SoftPlus => output: (0, infinity)
         public static double SoftPlus(double x) => Math.Log(1 + Math.Exp(x));

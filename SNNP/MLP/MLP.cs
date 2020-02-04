@@ -85,7 +85,7 @@ namespace SNNP.MLP
         /// <param name="threshold">Threshold to stop the training process.</param>
         /// <param name="iterations">Maximum number of iterations to stop the training process.</param>
         /// <returns>A list with the mean squared error over each epoch.</returns>
-        public List<double> Backpropagation(double[,] dataset, double eta = 0.01, double threshold = 1e-3, int iterations = 50000)
+        public List<double> Backpropagation(double[,] dataset, double eta = 0.01, double threshold = 1e-5, int iterations = 50000)
         {
             List<double> ret = new List<double>();
 
@@ -178,7 +178,7 @@ namespace SNNP.MLP
         /// <param name="iterations">Maximum number of iterations to stop the training process.</param>
         /// <param name="k">To reduce the intensity of the momentum.</param>
         /// <returns></returns>
-        public List<double> Backpropagation_Momentum(double[,] dataset, double eta = .01, double threshold = 1e-3, int iterations = 50000, double k = .9)
+        public List<double> Backpropagation_Momentum(double[,] dataset, double eta = .01, double threshold = 1e-3, int iterations = 50000, double k = .8)
         {
             List<double> ret = new List<double>();
 
@@ -267,11 +267,17 @@ namespace SNNP.MLP
 
                     for (int j = w.Length - 1; j > -1; j--)
                     {
-                        w[j] -= eta * w_gradients[j] + k * wLastGradients[j];
-                        b[j] -= eta * b_gradients[j] + k * bLastGradients[j];
+                        var wg = eta * w_gradients[j];
+                        var bg = eta * b_gradients[j];
 
-                        wLastGradients[j] = k * w_gradients[j];
-                        bLastGradients[j] = k * bLastGradients[j];
+                        var kwg = k * wLastGradients[j];
+                        var bwg = k * bLastGradients[j];
+
+                        w[j] -= wg + kwg;
+                        b[j] -= bg + bwg;
+
+                        wLastGradients[j] = wg;
+                        bLastGradients[j] = bg;
                     }
                 }
 

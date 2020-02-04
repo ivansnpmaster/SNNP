@@ -1,9 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Data;
 using System.Collections.Generic;
 using Microsoft.VisualBasic.FileIO;
-using System.Xml.Serialization;
-using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SNNP.MLP
