@@ -49,7 +49,7 @@ namespace SNNP.KNN
                 Dictionary<int, double> distances = new Dictionary<int, double>();
 
                 for (int i = 0; i < rows; i++)
-                    distances.Add(i, Utility.GetDistanceSqr(input, points[i].f));
+                    distances.Add(i, Mathf.GetDistanceSqr(input, points[i].f));
 
                 // Starting index, number of elements to return (k)
                 var knn = distances.OrderBy(d => d.Value).ToList().GetRange(0, _k);

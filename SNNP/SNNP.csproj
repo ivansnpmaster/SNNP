@@ -46,6 +46,7 @@
     <Compile Include="kMeans\KMeans.cs" />
     <Compile Include="KNN\KNN.cs" />
     <Compile Include="KNN\Point.cs" />
+    <Compile Include="Math.cs" />
     <Compile Include="MLP\Activation.cs" />
     <Compile Include="MLP\Matrix.cs" />
     <Compile Include="MLP\MLP.cs" />

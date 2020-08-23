@@ -1,6 +1,7 @@
 ﻿using System;
+
+using SNNP;
 using SNNP.MLP;
-using System.IO;
 using SNNP.kMeans;
 
 namespace SNNP_Test
@@ -10,10 +11,15 @@ namespace SNNP_Test
         static void Main(string[] _)
         {
             // Multilayer Perceptron example
-            MLPExample();
+            //MLPExample();
 
             // KMeans example
-            //KMeansExample();
+            KMeansExample();
+
+            // Eigenvalue Power Method example
+            //EPMExample();
+
+            Console.ReadLine();
         }
 
         private static void KMeansExample()
@@ -26,13 +32,12 @@ namespace SNNP_Test
                 {3.5, 0.5},
                 {2.0, 0.5},
                 {5.5, 1.0},
-                {1.0, 1.0}
+                {1.0, 1.0},
             };
 
-            var kmeans = new KMeans(data, 2, 400);
+            var kmeans = new KMeans(data, 2, 10, true);
 
             Console.WriteLine("Done");
-            Console.ReadLine();
         }
 
         private static void MLPExample()
@@ -48,13 +53,13 @@ namespace SNNP_Test
 
             // Optional -> fit into [0, 1] range
             //dataset = Utility.NormalizeData(dataset);
-            dataset = Utility.Standardize(dataset);
+            dataset = Mathf.Standardize(dataset);
 
             // Training
             var r = mlp.Backpropagation_Momentum(dataset, threshold: 1e-15);
 
             // Saving into a file the mean squared error over the epochs
-            using (var sw = new StreamWriter("MLPExample.txt"))
+            using (var sw = new System.IO.StreamWriter("MLPExample.txt"))
                 foreach (double d in r)
                     sw.WriteLine(d);
 
@@ -64,6 +69,22 @@ namespace SNNP_Test
             //Console.WriteLine(o.ToString());
 
             Console.WriteLine("Done");
+            Console.ReadLine();
+        }
+
+        private static void EPMExample()
+        {
+            double[,] d = new double[,]
+            {
+                {7, 9},
+                {9, 7}
+            };
+
+            var epm = Mathf.EPM(d);
+
+            Console.WriteLine($"Eigenvalue: {epm.Item1}");
+            Console.WriteLine($"Eigenvector: [{epm.Item2.data[0, 0]}, {epm.Item2.data[1, 0]}]");
+
             Console.ReadLine();
         }
     }

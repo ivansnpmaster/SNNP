@@ -1,77 +1,14 @@
 ﻿using System;
-using System.IO;
 using System.Data;
 using System.Collections.Generic;
-using Microsoft.VisualBasic.FileIO;
-using System.Runtime.Serialization.Formatters.Binary;
 
-namespace SNNP.MLP
+namespace SNNP
 {
     public static class Utility
     {
-        private static readonly Random random = new Random();
-
-        public static double NextDouble(double minValue, double maxValue) => random.NextDouble() * (maxValue - minValue) + minValue;
-
-        public static int Next(int minValue, int maxValue) => random.Next(minValue, maxValue);
-
-        public static double Map(double value, double istart, double istop, double ostart, double ostop) => ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-
-        public static double[,] NormalizeData(double[,] data)
-        {
-            double[] min = new double[data.GetLength(1)];
-            double[] max = new double[data.GetLength(1)];
-
-            for (int i = 0; i < data.GetLength(0); i++)
-                for (int j = 0; j < data.GetLength(1); j++)
-                {
-                    min[j] = data[i, j] < min[j] ? data[i, j] : min[j];
-                    max[j] = data[i, j] > max[j] ? data[i, j] : max[j];
-                }
-
-            double[,] normalized = new double[data.GetLength(0), data.GetLength(1)];
-
-            for (int i = 0; i < data.GetLength(0); i++)
-                for (int j = 0; j < data.GetLength(1); j++)
-                    normalized[i, j] = Map(data[i, j], min[j], max[j], 0, 1);
-
-            return normalized;
-        }
-
-        public static double[,] Standardize(double[,] data)
-        {
-            double cols = data.GetLength(1);
-
-            double[] mean = new double[data.GetLength(1)];
-            double[] sd = new double[data.GetLength(1)];
-
-            int rows = data.GetLength(0);
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    mean[j] += data[i, j] / cols;
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    sd[j] += (data[i, j] - mean[j]) * (data[i, j] - mean[j]);
-
-            for (int j = 0; j < cols; j++)
-                sd[j] /= Math.Sqrt(sd[j] / (rows - 1));
-
-            double[,] z = new double[rows, data.GetLength(1)];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    z[i, j] = (data[i, j] - mean[j]) / sd[j];
-
-            return z;
-        }
-
         public static double[,] LoadCsv(string path, string delimiter = ",", string commentToken = "#", bool quotes = false, bool header = false)
         {
-            Console.WriteLine(string.Format("Loading file at {0}", path));
-
-            using (TextFieldParser csvParser = new TextFieldParser(path))
+            using (var csvParser = new Microsoft.VisualBasic.FileIO.TextFieldParser(path))
             {
                 csvParser.CommentTokens = new string[] { commentToken };
                 csvParser.SetDelimiters(new string[] { delimiter });
@@ -80,7 +17,7 @@ namespace SNNP.MLP
                 if (header)
                     csvParser.ReadLine();
 
-                List<double[]> data = new List<double[]>();
+                var data = new List<double[]>();
 
                 while (!csvParser.EndOfData)
                 {
@@ -98,39 +35,18 @@ namespace SNNP.MLP
                     for (int j = 0; j < newData.GetLength(1); j++)
                         newData[i, j] = data[i][j];
 
-                Console.WriteLine("End of loading the file");
-
                 return newData;
             }
         }
 
-        public static double[] GetCentroid(double[,] points)
+        public static double[] ExtractColumn(double[,] data, int columnIndex)
         {
-            double[] r = new double[points.GetLength(1)];
+            double[] r = new double[data.GetLength(0)];
 
-            for (int i = 0; i < points.GetLength(0); i++)
-                for (int j = 0; j < points.GetLength(1); j++)
-                    r[j] += points[i, j];
-
-            for (int i = 0; i < r.Length; i++)
-                r[i] /= points.GetLength(0);
+            for (int i = r.Length; i-- > 0;)
+                r[i] = data[i, columnIndex];
 
             return r;
-        }
-
-        public static double GetDistance(double[] a, double[] b)
-        {
-            return Math.Sqrt(GetDistanceSqr(a, b));
-        }
-
-        public static double GetDistanceSqr(double[] a, double[] b)
-        {
-            double distance = 0;
-
-            for (int i = 0; i < a.Length; i++)
-                distance += (a[i] - b[i]) * (a[i] - b[i]);
-
-            return distance;
         }
 
         /// <summary>
@@ -155,19 +71,42 @@ namespace SNNP.MLP
             catch (Exception) { throw; }
         }
 
+        public static void ExportCSV(object[,] exportData, string filePath = null)
+        {
+            var file = string.Format(@"{0}\{1}.csv", filePath ?? AppContext.BaseDirectory, DateTime.Now.ToLongDateString());
+
+            using (var stream = System.IO.File.CreateText(file))
+            {
+                int rows = exportData.GetLength(0);
+                int cols = exportData.GetLength(1);
+
+                for (int i = 0; i < rows; i++)
+                {
+                    string csvRow = "";
+
+                    for (int j = 0; j < cols - 1; j++)
+                        csvRow += string.Format("{0};", exportData[i, j].ToString());
+
+                    csvRow += exportData[i, cols - 1].ToString();
+
+                    stream.WriteLine(csvRow);
+                }
+            }
+        }
+
         public static bool Save<T>(string filePath, object objectToSave)
         {
             try
             {
-                using (Stream stream = File.Open(string.Format("{0}.bin", filePath), FileMode.Create))
+                using (var stream = System.IO.File.Open(string.Format("{0}.bin", filePath), System.IO.FileMode.Create))
                 {
-                    BinaryFormatter bin = new BinaryFormatter();
+                    var bin = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                     bin.Serialize(stream, objectToSave);
                 }
 
                 return true;
             }
-            catch (IOException) { throw; }
+            catch (System.IO.IOException) { throw; }
         }
 
         public static T Load<T>(string filePath)
@@ -176,15 +115,15 @@ namespace SNNP.MLP
             {
                 object o;
 
-                using (Stream stream = File.Open(filePath, FileMode.Open))
+                using (var stream = System.IO.File.Open(filePath, System.IO.FileMode.Open))
                 {
-                    BinaryFormatter bin = new BinaryFormatter();
+                    var bin = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                     o = (T)bin.Deserialize(stream);
                 }
 
                 return (T)o;
             }
-            catch (IOException) { throw; }
+            catch (System.IO.IOException) { throw; }
         }
     }
 }

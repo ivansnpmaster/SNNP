@@ -1,8 +1,9 @@
-﻿using SNNP.MLP;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SNNP.kMeans
 {
+    [Serializable()]
     public class Cluster
     {
         public double[] position;
@@ -11,6 +12,7 @@ namespace SNNP.kMeans
         public Cluster(double[] _position)
         {
             position = _position;
+            points.Add(position);
         }
 
         public double[] RecalculatePosition()
@@ -21,7 +23,7 @@ namespace SNNP.kMeans
                 for (int j = 0; j < p.GetLength(1); j++)
                     p[i, j] = points[i][j];
 
-            position = Utility.GetCentroid(p);
+            position = Mathf.GetCentroid(p);
 
             return position;
         }

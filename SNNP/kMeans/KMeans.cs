@@ -1,8 +1,9 @@
-﻿using SNNP.MLP;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SNNP.kMeans
 {
+    [Serializable()]
     public class KMeans
     {
         public int k;
@@ -15,7 +16,7 @@ namespace SNNP.kMeans
         private Cluster[] clusters;
 
         private Dictionary<int, int> lastClosest;
-        private Dictionary<int, int> stopCriteria;
+        private Dictionary<int, int> stopCriteria = null;
 
         /// <summary>
         /// Create a vanilla KMeans algorithm.
@@ -23,11 +24,10 @@ namespace SNNP.kMeans
         /// <param name="data">Data to be clustered.</param>
         /// <param name="nClusters">Number of clusters.</param>
         /// <param name="minIterations">Amount of minimal iterations to find the clusters.</param>
-        public KMeans(double[,] data, int nClusters, int minIterations = 2)
+        public KMeans(double[,] data, int nClusters, int minIterations = 2, bool saveOutput = false)
         {
             k = nClusters;
             dataset = data;
-            iterations = minIterations;
             rows = data.GetLength(0);
             cols = data.GetLength(1);
 
@@ -40,30 +40,53 @@ namespace SNNP.kMeans
             {
                 nIter++;
 
-                for (int j = 0; j < clusters.Length; j++)
-                    clusters[j].points.Clear();
+                for (int i = 0; i < clusters.Length; i++)
+                    clusters[i].points.Clear();
 
                 GetClosestClusters();
 
-                for (int j = 0; j < k; j++)
-                    clusters[j].RecalculatePosition();
+                for (int i = 0; i < k; i++)
+                    clusters[i].RecalculatePosition();
 
                 stop = true;
 
                 if (stopCriteria == null)
-                {
                     stopCriteria = lastClosest;
-                    continue;
+                else
+                {
+                    for (int i = lastClosest.Count; i-- > 0;)
+                        if (lastClosest[i] != stopCriteria[i])
+                        {
+                            stop = false;
+                            break;
+                        }
+
+                    if (!stop)
+                        stopCriteria = lastClosest;
                 }
 
-                // Cheking if the 'lastClosest' is equal to 'stopCriteria'
+            } while (!stop || nIter < minIterations);
 
-                foreach (var a in lastClosest.Keys)
-                    // If any key is different, don't stop
-                    if (lastClosest[a] != stopCriteria[a])
-                        stop = false;
+            iterations = nIter;
 
-            } while (!stop || nIter <= iterations);
+            if (saveOutput)
+            {
+                // Save class file
+                Utility.Save<KMeans>(AppContext.BaseDirectory, this);
+
+                // +1 for the classification
+                object[,] exportData = new object[rows, cols + 1];
+
+                for (int i = rows; i-- > 0;)
+                {
+                    for (int j = cols; j-- > 0;)
+                        exportData[i, j] = data[i, j];
+
+                    exportData[i, cols] = stopCriteria[i];
+                }
+
+                Utility.ExportCSV(exportData);
+            }
         }
 
         /// <summary>
@@ -72,7 +95,7 @@ namespace SNNP.kMeans
         private void GetClosestClusters()
         {
             // int - Index of the line in the dataset; int - Cluster's index
-            Dictionary<int, int> closest = new Dictionary<int, int>();
+            var closest = new Dictionary<int, int>();
 
             for (int i = 0; i < rows; i++)
             {
@@ -90,7 +113,7 @@ namespace SNNP.kMeans
                     for (int m = 0; m < position.Length; m++)
                         position[m] = dataset[i, m];
 
-                    double distance = Utility.GetDistanceSqr(position, clusters[j].position);
+                    double distance = Mathf.GetDistanceSqr(position, clusters[j].position);
 
                     if (distance < recordDistance)
                     {
@@ -99,10 +122,7 @@ namespace SNNP.kMeans
                     }
                 }
 
-                if (closest.ContainsKey(recordIndex))
-                    closest[recordIndex]++;
-                else
-                    closest.Add(recordIndex, 1);
+                closest.Add(i, recordIndex);
 
                 double[] point = new double[cols];
 
@@ -133,7 +153,7 @@ namespace SNNP.kMeans
                 // Check if a line in the dataset was found in the initial clusters
                 bool clusterFound = false;
                 // Random index within the dataset
-                int randomIndex = Utility.Next(0, cols);
+                int randomIndex = Mathf.Next(0, rows);
 
                 // Check if the random index already exists in the cluster's array of indexes
                 for (int j = 0; j < iCluster.Length; j++)
@@ -147,10 +167,13 @@ namespace SNNP.kMeans
                 if (!clusterFound)
                 {
                     iCluster[i] = randomIndex;
-                    clusters[i] = new Cluster(new double[cols]);
+
+                    double[] point = new double[cols];
 
                     for (int j = 0; j < cols; j++)
-                        clusters[i].position[j] = dataset[randomIndex, j];
+                        point[j] = dataset[randomIndex, j];
+
+                    clusters[i] = new Cluster(point);
                 }
                 else
                     i--;

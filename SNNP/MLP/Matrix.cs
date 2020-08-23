@@ -31,11 +31,29 @@ namespace SNNP.MLP
                 data[i, 0] = inputs[i];
         }
 
+        public Matrix(double[,] input)
+        {
+            data = input;
+            r = data.GetLength(0);
+            c = data.GetLength(1);
+        }
+
+        public Matrix(Matrix[] matrices)
+        {
+            r = matrices[0].r;
+            c = matrices.Length;
+            data = new double[r, c];
+
+            for (int i = 0; i < matrices.Length; i++)
+                for (int j = 0; j < r; j++)
+                    data[j, i] = matrices[i].data[j, 0];
+        }
+
         public void Randomize()
         {
             for (int i = 0; i < r; i++)
                 for (int j = 0; j < c; j++)
-                    data[i, j] = Utility.NextDouble(-0.5, 0.5);
+                    data[i, j] = Mathf.NextDouble(-0.5, 0.5);
         }
 
         public void T()
@@ -73,6 +91,27 @@ namespace SNNP.MLP
                 ret += data[i, 0] * data[i, 0];
 
             return ret / (double)r;
+        }
+
+        public double Length()
+        {
+            double length = 0;
+
+            for (int i = 0; i < r; i++)
+                length += data[i, 0] * data[i, 0];
+
+            return Math.Sqrt(length);
+        }
+
+        public Matrix Normalize()
+        {
+            double length = Length();
+            Matrix r = this;
+
+            for (int i = 0; i < r.r; i++)
+                data[i, 0] /= length;
+
+            return r;
         }
 
         public void Map(Func<double, double> f)
@@ -156,6 +195,22 @@ namespace SNNP.MLP
         public static Matrix operator *(double n, Matrix m)
         {
             return m * n;
+        }
+
+        public static Matrix operator /(Matrix m, double n)
+        {
+            Matrix ret = new Matrix(m.r, m.c);
+
+            for (int i = 0; i < m.r; i++)
+                for (int j = 0; j < m.c; j++)
+                    ret.data[i, j] = m.data[i, j] / n;
+
+            return ret;
+        }
+
+        public static Matrix operator /(double n, Matrix m)
+        {
+            return m / n;
         }
 
         public static Matrix operator ^(Matrix m, double n)
